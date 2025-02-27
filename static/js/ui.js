@@ -73,7 +73,7 @@ class UI {
         // 創建玩家名稱
         const playerNames = ['玩家'];
         for (let i = 1; i < this.playerCount; i++) {
-            playerNames.push(`電腦${i}`);
+            playerNames.push(`虛擬AI對手${i}`);
         }
         
         // 創建遊戲
