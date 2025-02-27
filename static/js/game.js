@@ -471,4 +471,20 @@ class Game {
             }
         }
     }
+
+    /**
+     * 獲取顏色名稱
+     * @param {string} color - 顏色代碼
+     * @returns {string} 顏色名稱
+     */
+    getColorName(color) {
+        const colorNames = {
+            'red': '紅色',
+            'yellow': '黃色',
+            'green': '綠色',
+            'blue': '藍色',
+            'wild': '彩色'
+        };
+        return colorNames[color] || color;
+    }
 } 

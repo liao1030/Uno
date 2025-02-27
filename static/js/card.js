@@ -106,6 +106,14 @@ class Card {
     }
 
     /**
+     * 渲染卡牌
+     * @returns {HTMLElement} 卡牌元素
+     */
+    render() {
+        return this.createCardElement();
+    }
+
+    /**
      * 創建卡牌的HTML元素
      * @param {boolean} faceDown - 是否面朝下
      * @returns {HTMLElement} 卡牌元素
