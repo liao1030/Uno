@@ -128,12 +128,20 @@ class UI {
      * 開始遊戲
      */
     startGame() {
+        // 獲取玩家名稱
+        let playerName = document.getElementById('player-name-field').value.trim();
+        
+        // 如果玩家沒有輸入名稱，使用預設名稱
+        if (!playerName) {
+            playerName = "玩家";
+        }
+        
         // 隱藏選單，顯示遊戲板
         document.getElementById('game-menu').style.display = 'none';
         document.getElementById('game-board').style.display = 'flex';
         
         // 創建玩家名稱
-        const playerNames = ['玩家'];
+        const playerNames = [playerName];
         for (let i = 1; i < this.playerCount; i++) {
             playerNames.push(`虛擬AI對手${i}`);
         }

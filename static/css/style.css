@@ -78,6 +78,33 @@ button:disabled {
     margin: 0 auto;
 }
 
+.player-name-input {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.player-name-input label {
+    font-size: 1.1rem;
+    color: #333;
+    text-align: left;
+}
+
+.player-name-input input {
+    padding: 10px;
+    border: 2px solid #d9534f;
+    border-radius: 5px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.player-name-input input:focus {
+    border-color: #c9302c;
+    box-shadow: 0 0 5px rgba(217, 83, 79, 0.5);
+}
+
 .menu-options button {
     font-size: 1.2rem;
     padding: 15px;
