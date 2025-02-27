@@ -39,7 +39,15 @@ class UI {
         // 遊戲內按鈕
         document.getElementById('deck').addEventListener('click', () => this.drawCard());
         document.getElementById('uno-button').addEventListener('click', () => this.callUno());
-        document.getElementById('restart-game').addEventListener('click', () => this.restartGame());
+        
+        // 確保重新開始按鈕事件監聽器正確綁定
+        const restartButton = document.getElementById('restart-game');
+        if (restartButton) {
+            restartButton.addEventListener('click', () => this.restartGame());
+            console.log('重新開始按鈕事件監聽器已綁定');
+        } else {
+            console.error('找不到重新開始按鈕元素');
+        }
         
         // 顏色選擇器
         const colorOptions = document.querySelectorAll('.color-option');
@@ -339,10 +347,15 @@ class UI {
      * 重新開始遊戲（回到首頁）
      */
     restartGame() {
+        console.log('重新開始按鈕被點擊');
         if (confirm('確定要返回首頁嗎？當前進度將會丟失。')) {
+            console.log('用戶確認返回首頁');
             this.resetGame();
             document.getElementById('game-board').style.display = 'none';
             document.getElementById('game-menu').style.display = 'block';
+            console.log('已返回首頁');
+        } else {
+            console.log('用戶取消返回首頁');
         }
     }
 
