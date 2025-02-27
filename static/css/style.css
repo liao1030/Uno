@@ -595,4 +595,13 @@ button:disabled {
     .game-controls button {
         width: 100%;
     }
+}
+
+#restart-game {
+    background-color: #1976D2;
+    color: white;
+}
+
+#restart-game:hover {
+    background-color: #1565C0;
 } 

@@ -23,43 +23,41 @@ class UI {
      * 綁定事件處理程序
      */
     bindEventHandlers() {
-        // 主菜單按鈕
+        // 主選單按鈕
         document.getElementById('start-game').addEventListener('click', () => this.startGame());
-        document.getElementById('rules').addEventListener('click', () => this.showRules());
         document.getElementById('rules-tutorial').addEventListener('click', () => this.showTutorial());
         document.getElementById('settings').addEventListener('click', () => this.showSettings());
+        
+        // 關閉按鈕
+        document.getElementById('close-tutorial').addEventListener('click', () => this.hideTutorial());
+        document.getElementById('close-settings').addEventListener('click', () => this.hideSettings());
+        
+        // 教學導航按鈕
+        document.getElementById('prev-slide').addEventListener('click', () => this.prevSlide());
+        document.getElementById('next-slide').addEventListener('click', () => this.nextSlide());
         
         // 遊戲內按鈕
         document.getElementById('deck').addEventListener('click', () => this.drawCard());
         document.getElementById('uno-button').addEventListener('click', () => this.callUno());
+        document.getElementById('in-game-rules').addEventListener('click', () => this.showTutorial());
         document.getElementById('restart-game').addEventListener('click', () => this.restartGame());
-        document.getElementById('in-game-rules').addEventListener('click', () => this.showRules());
-        
-        // 規則模態框
-        document.getElementById('close-rules').addEventListener('click', () => this.hideRules());
-        
-        // 規則解說模態框
-        document.getElementById('close-tutorial').addEventListener('click', () => this.hideTutorial());
-        document.getElementById('prev-slide').addEventListener('click', () => this.prevSlide());
-        document.getElementById('next-slide').addEventListener('click', () => this.nextSlide());
-        
-        // 設置模態框
-        document.getElementById('close-settings').addEventListener('click', () => this.hideSettings());
-        document.getElementById('save-settings').addEventListener('click', () => this.saveSettings());
         
         // 顏色選擇器
         const colorOptions = document.querySelectorAll('.color-option');
         colorOptions.forEach(option => {
-            option.addEventListener('click', (e) => {
-                this.selectedColor = e.target.dataset.color;
+            option.addEventListener('click', () => {
+                this.selectedColor = option.dataset.color;
                 this.hideColorPicker();
                 this.playSelectedCard();
             });
         });
         
-        // 遊戲結束模態框
+        // 遊戲結束按鈕
         document.getElementById('play-again').addEventListener('click', () => this.playAgain());
         document.getElementById('back-to-menu').addEventListener('click', () => this.backToMenu());
+        
+        // 設定按鈕
+        document.getElementById('save-settings').addEventListener('click', () => this.saveSettings());
     }
 
     /**
@@ -288,50 +286,6 @@ class UI {
     }
 
     /**
-     * 顯示規則
-     */
-    showRules() {
-        document.getElementById('rules-modal').style.display = 'flex';
-    }
-
-    /**
-     * 隱藏規則
-     */
-    hideRules() {
-        document.getElementById('rules-modal').style.display = 'none';
-    }
-
-    /**
-     * 顯示設定
-     */
-    showSettings() {
-        // 更新設定界面
-        document.getElementById('player-count').value = this.playerCount;
-        document.getElementById('sound-toggle').checked = this.soundEnabled;
-        document.getElementById('difficulty').value = this.difficulty;
-        
-        document.getElementById('settings-modal').style.display = 'flex';
-    }
-
-    /**
-     * 隱藏設定
-     */
-    hideSettings() {
-        document.getElementById('settings-modal').style.display = 'none';
-    }
-
-    /**
-     * 保存設定
-     */
-    saveSettings() {
-        this.playerCount = parseInt(document.getElementById('player-count').value);
-        this.soundEnabled = document.getElementById('sound-toggle').checked;
-        this.difficulty = document.getElementById('difficulty').value;
-        
-        this.hideSettings();
-    }
-
-    /**
      * 顯示規則解說模態框
      */
     showTutorial() {
@@ -408,5 +362,35 @@ class UI {
         this.game = null;
         this.gameRunning = false;
         this.selectedColor = null;
+    }
+
+    /**
+     * 顯示設定
+     */
+    showSettings() {
+        // 更新設定界面
+        document.getElementById('player-count').value = this.playerCount;
+        document.getElementById('sound-toggle').checked = this.soundEnabled;
+        document.getElementById('difficulty').value = this.difficulty;
+        
+        document.getElementById('settings-modal').style.display = 'flex';
+    }
+
+    /**
+     * 隱藏設定
+     */
+    hideSettings() {
+        document.getElementById('settings-modal').style.display = 'none';
+    }
+
+    /**
+     * 保存設定
+     */
+    saveSettings() {
+        this.playerCount = parseInt(document.getElementById('player-count').value);
+        this.soundEnabled = document.getElementById('sound-toggle').checked;
+        this.difficulty = document.getElementById('difficulty').value;
+        
+        this.hideSettings();
     }
 } 
