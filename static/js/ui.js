@@ -131,7 +131,7 @@ class UI {
         // 獲取玩家名稱
         let playerName = document.getElementById('player-name-field').value.trim();
         
-        // 如果玩家沒有輸入名稱，使用預設名稱
+        // 如果玩家沒有選擇名稱，使用預設名稱
         if (!playerName) {
             playerName = "玩家";
         }
@@ -139,6 +139,9 @@ class UI {
         // 隱藏選單，顯示遊戲板
         document.getElementById('game-menu').style.display = 'none';
         document.getElementById('game-board').style.display = 'flex';
+        
+        // 更新玩家名稱顯示
+        document.getElementById('player-name').textContent = playerName;
         
         // 創建玩家名稱
         const playerNames = [playerName];
