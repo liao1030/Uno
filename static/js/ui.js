@@ -133,23 +133,15 @@ class UI {
         
         // 如果玩家沒有選擇名稱，使用預設名稱
         if (!playerName) {
-            playerName = "小蜜桃";
+            playerName = "玩家";
         }
-        
-        console.log('選擇的玩家名稱:', playerName);
         
         // 隱藏選單，顯示遊戲板
         document.getElementById('game-menu').style.display = 'none';
         document.getElementById('game-board').style.display = 'flex';
         
         // 更新玩家名稱顯示
-        const playerNameElement = document.getElementById('player-name');
-        if (playerNameElement) {
-            playerNameElement.textContent = playerName;
-            console.log('已更新玩家名稱顯示為:', playerName);
-        } else {
-            console.error('找不到player-name元素');
-        }
+        document.getElementById('player-name').textContent = playerName;
         
         // 創建玩家名稱
         const playerNames = [playerName];
