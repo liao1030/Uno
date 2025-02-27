@@ -99,6 +99,11 @@ class UI {
             if (e.target.closest('.card')) {
                 // 觸摸卡牌時添加活躍狀態
                 e.target.closest('.card').classList.add('touch-active');
+                
+                // 振動反饋（如果設備支持）
+                if (navigator.vibrate) {
+                    navigator.vibrate(30);
+                }
             }
         }, false);
         
@@ -108,6 +113,121 @@ class UI {
                 card.classList.remove('touch-active');
             });
         }, false);
+        
+        // 添加手牌區域滑動指示
+        this.setupHandOverflowDetection();
+        
+        // 改進按鈕觸摸體驗
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('touchstart', () => {
+                if (navigator.vibrate) {
+                    navigator.vibrate(20);
+                }
+            }, false);
+        });
+        
+        // 改進模態框滾動
+        document.querySelectorAll('.tutorial-content, .settings-content').forEach(modal => {
+            modal.addEventListener('touchmove', (e) => {
+                e.stopPropagation();
+            }, { passive: true });
+        });
+        
+        // 添加手勢支持
+        this.setupSwipeGestures();
+    }
+    
+    /**
+     * 設置手牌溢出檢測
+     */
+    setupHandOverflowDetection() {
+        // 創建一個ResizeObserver來監視玩家手牌區域的大小變化
+        if (window.ResizeObserver) {
+            const playerHand = document.getElementById('player-hand');
+            if (playerHand) {
+                const resizeObserver = new ResizeObserver(() => {
+                    this.checkHandOverflow();
+                });
+                resizeObserver.observe(playerHand);
+                
+                // 初始檢查
+                this.checkHandOverflow();
+                
+                // 在窗口大小變化時也檢查
+                window.addEventListener('resize', () => {
+                    this.checkHandOverflow();
+                });
+            }
+        }
+    }
+    
+    /**
+     * 檢查手牌是否溢出
+     */
+    checkHandOverflow() {
+        const playerHand = document.getElementById('player-hand');
+        if (playerHand) {
+            // 檢查是否有水平溢出
+            const hasOverflow = playerHand.scrollWidth > playerHand.clientWidth;
+            
+            // 根據是否溢出添加或移除類
+            if (hasOverflow) {
+                playerHand.classList.add('has-overflow');
+            } else {
+                playerHand.classList.remove('has-overflow');
+            }
+            
+            console.log('手牌溢出檢測:', hasOverflow ? '有溢出' : '無溢出');
+        }
+    }
+    
+    /**
+     * 設置滑動手勢
+     */
+    setupSwipeGestures() {
+        if (!this.isMobileDevice) return;
+        
+        let touchStartX = 0;
+        let touchEndX = 0;
+        let touchStartY = 0;
+        let touchEndY = 0;
+        
+        // 教學模態框滑動切換
+        const tutorialModal = document.getElementById('tutorial-modal');
+        if (tutorialModal) {
+            tutorialModal.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+                touchStartY = e.changedTouches[0].screenY;
+            }, false);
+            
+            tutorialModal.addEventListener('touchend', (e) => {
+                touchEndX = e.changedTouches[0].screenX;
+                touchEndY = e.changedTouches[0].screenY;
+                this.handleSwipe(touchStartX, touchEndX, touchStartY, touchEndY);
+            }, false);
+        }
+    }
+    
+    /**
+     * 處理滑動手勢
+     */
+    handleSwipe(startX, endX, startY, endY) {
+        const diffX = startX - endX;
+        const diffY = startY - endY;
+        
+        // 確保是水平滑動而不是垂直滑動
+        if (Math.abs(diffX) > Math.abs(diffY) * 2) {
+            // 檢查是否在教學模態框中
+            if (document.getElementById('tutorial-modal').style.display === 'block') {
+                if (diffX > 50) {
+                    // 向左滑動，顯示下一張幻燈片
+                    this.nextSlide();
+                } else if (diffX < -50) {
+                    // 向右滑動，顯示上一張幻燈片
+                    this.prevSlide();
+                }
+            }
+        }
     }
     
     /**
@@ -119,9 +239,36 @@ class UI {
             setTimeout(() => {
                 if (this.game) {
                     this.game.render(cardIndex => this.onCardClick(cardIndex));
+                    
+                    // 檢查手牌溢出
+                    this.checkHandOverflow();
+                    
+                    // 調整UI佈局
+                    this.adjustLayoutForOrientation();
                 }
             }, 300);
         });
+    }
+    
+    /**
+     * 根據屏幕方向調整佈局
+     */
+    adjustLayoutForOrientation() {
+        const isLandscape = window.matchMedia("(orientation: landscape)").matches;
+        console.log('屏幕方向:', isLandscape ? '橫屏' : '豎屏');
+        
+        // 根據方向調整UI元素
+        if (isLandscape) {
+            // 橫屏模式下的調整
+            document.querySelectorAll('.opponent').forEach(opponent => {
+                opponent.style.maxWidth = '100%';
+            });
+        } else {
+            // 豎屏模式下的調整
+            document.querySelectorAll('.opponent').forEach(opponent => {
+                opponent.style.maxWidth = '';
+            });
+        }
     }
 
     /**

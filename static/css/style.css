@@ -821,14 +821,252 @@ button:disabled {
     transform: translateY(-5px) scale(1.05);
     z-index: 10;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 /* 改進滾動體驗 */
 .player-hand, .opponents-area {
     -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+
+/* 自定義滾動條 */
+.player-hand::-webkit-scrollbar, .opponents-area::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+}
+
+.player-hand::-webkit-scrollbar-track, .opponents-area::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.player-hand::-webkit-scrollbar-thumb, .opponents-area::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
 }
 
 /* 改進按鈕觸摸反饋 */
 button:active {
     transform: scale(0.98);
+    transition: transform 0.1s ease;
+}
+
+/* 添加觸摸反饋動畫 */
+@keyframes touch-ripple {
+    0% {
+        transform: scale(1);
+        opacity: 0.4;
+    }
+    100% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+}
+
+.card:active::after, button:active::after, .color-option:active::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: inherit;
+    animation: touch-ripple 0.4s ease-out;
+    pointer-events: none;
+}
+
+/* 改進移動設備上的模態框 */
+@media (max-width: 768px) {
+    /* 更新現有的媒體查詢 */
+    .tutorial-modal, .settings-modal, .game-over-modal, .color-picker-modal {
+        padding: 0;
+    }
+    
+    .tutorial-content, .settings-content, .game-over-content, .color-picker-content {
+        max-height: 90vh;
+        overflow-y: auto;
+        border-radius: 15px;
+    }
+    
+    .close-button {
+        font-size: 2rem;
+        padding: 5px 10px;
+    }
+    
+    /* 改進表單元素 */
+    select, input[type="checkbox"] {
+        transform: scale(1.2);
+        margin: 10px;
+    }
+    
+    /* 改進卡牌懸停效果 */
+    .player-hand .card {
+        transition: transform 0.2s ease, z-index 0s;
+    }
+    
+    /* 改進玩家手牌區域 */
+    .player-hand {
+        padding: 15px 5px;
+        margin-bottom: 10px;
+        position: relative;
+    }
+    
+    /* 添加滑動指示器 */
+    .player-hand::after {
+        content: '← 滑動查看更多卡牌 →';
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.7);
+        pointer-events: none;
+        animation: fade-in-out 2s infinite;
+        opacity: 0;
+    }
+    
+    @keyframes fade-in-out {
+        0%, 100% { opacity: 0; }
+        50% { opacity: 1; }
+    }
+    
+    /* 只在有溢出時顯示滑動指示器 */
+    .player-hand.has-overflow::after {
+        display: block;
+    }
+    
+    .player-hand:not(.has-overflow)::after {
+        display: none;
+    }
+}
+
+/* 進一步優化小屏幕設備 */
+@media (max-width: 480px) {
+    /* 更新現有的媒體查詢 */
+    body {
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+    }
+    
+    /* 改進卡牌顯示 */
+    .card {
+        margin: 0 -10px;
+        transition: transform 0.2s ease, margin 0.2s ease, z-index 0s;
+    }
+    
+    /* 當前玩家回合指示器 */
+    .current-player {
+        font-weight: bold;
+        animation: pulse 1.5s infinite;
+    }
+    
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+    }
+    
+    /* 改進對手區域 */
+    .opponent {
+        padding: 8px;
+        border-radius: 10px;
+        background: rgba(0, 0, 0, 0.2);
+    }
+    
+    /* 當前對手高亮 */
+    .opponent.current {
+        background: rgba(255, 215, 0, 0.2);
+        box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    }
+}
+
+/* 優化橫屏模式 */
+@media (max-height: 500px) and (orientation: landscape) {
+    /* 更新現有的媒體查詢 */
+    .game-board {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        height: 85vh;
+    }
+    
+    .opponents-area {
+        width: 30%;
+        max-height: 85vh;
+    }
+    
+    .middle-area {
+        width: 40%;
+    }
+    
+    .player-area {
+        width: 30%;
+        max-height: 85vh;
+    }
+    
+    .player-hand {
+        flex-direction: column;
+        height: 70vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+    
+    .player-hand .card {
+        margin: -10px 0;
+    }
+}
+
+/* UNO按鈕脈動動畫 */
+@keyframes pulse-animation {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7);
+    }
+    70% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 10px rgba(255, 0, 0, 0);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 0, 0, 0);
+    }
+}
+
+.pulse-animation {
+    animation: pulse-animation 1.5s infinite;
+}
+
+/* 當前回合視覺提示 */
+.your-turn {
+    font-weight: bold;
+    color: #ffeb3b;
+    text-shadow: 0 0 5px rgba(255, 235, 59, 0.7);
+    animation: your-turn-animation 2s infinite;
+}
+
+@keyframes your-turn-animation {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+/* 改進對手當前回合指示器 */
+.opponent.current {
+    background: rgba(255, 215, 0, 0.2);
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    animation: opponent-current-animation 2s infinite;
+}
+
+@keyframes opponent-current-animation {
+    0%, 100% {
+        box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+    }
 } 

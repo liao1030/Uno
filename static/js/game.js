@@ -317,62 +317,157 @@ class Game {
     }
 
     /**
-     * 渲染遊戲狀態
-     * @param {function} onCardClick - 點擊卡牌時的回調函數
+     * 渲染遊戲
+     * @param {Function} onCardClick - 卡牌點擊事件處理程序
      */
     render(onCardClick) {
-        // 渲染牌組和棄牌堆
-        this.deck.render();
+        // 渲染玩家手牌
+        const playerHand = document.getElementById('player-hand');
+        if (playerHand) {
+            playerHand.innerHTML = '';
+            
+            this.players[0].hand.forEach((card, index) => {
+                const cardElement = card.render();
+                cardElement.addEventListener('click', () => onCardClick(index));
+                playerHand.appendChild(cardElement);
+            });
+        }
         
-        // 渲染當前顏色
-        const currentColorElement = document.getElementById('current-color');
-        if (currentColorElement) {
+        // 渲染對手
+        for (let i = 1; i < this.players.length; i++) {
+            const player = this.players[i];
+            const opponentElement = document.getElementById(`opponent-${player.name}`);
+            
+            if (opponentElement) {
+                // 更新對手名稱和分數
+                const opponentName = opponentElement.querySelector('.opponent-name');
+                if (opponentName) {
+                    opponentName.textContent = `${player.name} (分數: ${player.score})`;
+                }
+                
+                // 更新對手卡牌
+                const opponentCards = opponentElement.querySelector('.opponent-cards');
+                if (opponentCards) {
+                    opponentCards.innerHTML = '';
+                    
+                    for (let j = 0; j < player.hand.length; j++) {
+                        const cardBack = document.createElement('div');
+                        cardBack.className = 'opponent-card';
+                        opponentCards.appendChild(cardBack);
+                    }
+                }
+                
+                // 高亮當前玩家
+                if (i === this.currentPlayerIdx) {
+                    opponentElement.classList.add('current');
+                } else {
+                    opponentElement.classList.remove('current');
+                }
+            }
+        }
+        
+        // 渲染牌組
+        const deck = document.getElementById('deck');
+        if (deck) {
+            deck.innerHTML = '';
+            
+            if (this.deck.cards.length > 0) {
+                const cardBack = document.createElement('div');
+                cardBack.className = 'card card-back';
+                deck.appendChild(cardBack);
+            }
+        }
+        
+        // 渲染棄牌堆
+        const discardPile = document.getElementById('discard-pile');
+        if (discardPile) {
+            discardPile.innerHTML = '';
+            
             const topCard = this.deck.getTopDiscard();
             if (topCard) {
-                currentColorElement.className = `current-color ${topCard.activeColor}`;
+                discardPile.appendChild(topCard.render());
+            }
+        }
+        
+        // 渲染當前顏色
+        const currentColor = document.getElementById('current-color');
+        if (currentColor) {
+            const topCard = this.deck.getTopDiscard();
+            if (topCard) {
+                currentColor.textContent = `當前顏色: ${this.getColorName(topCard.color)}`;
+                currentColor.className = `current-color ${topCard.color}`;
             }
         }
         
         // 渲染方向
-        const directionElement = document.getElementById('direction');
-        if (directionElement) {
-            directionElement.textContent = this.direction === 1 ? '⟳' : '⟲';
+        const direction = document.getElementById('direction');
+        if (direction) {
+            direction.textContent = `方向: ${this.direction === 1 ? '順時針 ⟳' : '逆時針 ⟲'}`;
         }
         
         // 渲染當前玩家
-        const currentPlayerElement = document.getElementById('current-player');
-        if (currentPlayerElement) {
-            currentPlayerElement.textContent = `當前玩家: ${this.players[this.currentPlayerIdx].name}`;
+        const currentPlayer = document.getElementById('current-player');
+        if (currentPlayer) {
+            currentPlayer.textContent = `當前玩家: ${this.players[this.currentPlayerIdx].name}`;
+            
+            // 添加視覺提示
+            if (this.currentPlayerIdx === 0) {
+                currentPlayer.classList.add('your-turn');
+                // 振動提示（如果是移動設備）
+                if (navigator.vibrate && !this.lastTurnVibration) {
+                    navigator.vibrate([50, 100, 50]);
+                    this.lastTurnVibration = true;
+                }
+            } else {
+                currentPlayer.classList.remove('your-turn');
+                this.lastTurnVibration = false;
+            }
         }
         
-        // 渲染玩家手牌
-        for (let i = 0; i < this.players.length; i++) {
-            const isCurrentPlayer = i === 0; // 第一個玩家是人類玩家
-            this.players[i].renderHand(isCurrentPlayer, isCurrentPlayer ? onCardClick : null);
-        }
-        
-        // 更新UNO按鈕狀態
+        // 更新UNO按鈕顯示
         const unoButton = document.getElementById('uno-button');
         if (unoButton) {
             if (this.players[0].hand.length === 1 && !this.players[0].hasCalledUno) {
                 unoButton.style.display = 'block';
+                // 添加動畫效果提醒玩家
+                unoButton.classList.add('pulse-animation');
             } else {
                 unoButton.style.display = 'none';
+                unoButton.classList.remove('pulse-animation');
             }
         }
         
-        // 高亮顯示當前玩家
-        for (let i = 0; i < this.players.length; i++) {
-            const playerElement = i === 0 
-                ? document.querySelector('.player-area')
-                : document.getElementById(`opponent-${this.players[i].name}`);
+        // 優化移動設備體驗
+        this.optimizeMobileExperience();
+    }
+    
+    /**
+     * 優化移動設備體驗
+     */
+    optimizeMobileExperience() {
+        // 檢測是否為移動設備
+        const isMobileDevice = window.matchMedia("(max-width: 768px)").matches;
+        if (!isMobileDevice) return;
+        
+        // 調整卡牌間距，根據手牌數量
+        const playerHand = document.getElementById('player-hand');
+        if (playerHand) {
+            const cardCount = this.players[0].hand.length;
+            const cards = playerHand.querySelectorAll('.card');
             
-            if (playerElement) {
-                if (i === this.currentPlayerIdx) {
-                    playerElement.classList.add('current-turn');
-                } else {
-                    playerElement.classList.remove('current-turn');
-                }
+            // 根據卡牌數量調整邊距
+            if (cardCount > 7) {
+                cards.forEach(card => {
+                    card.style.margin = '0 -15px'; // 更多重疊
+                });
+            } else if (cardCount > 4) {
+                cards.forEach(card => {
+                    card.style.margin = '0 -10px'; // 標準重疊
+                });
+            } else {
+                cards.forEach(card => {
+                    card.style.margin = '0 5px'; // 較少重疊
+                });
             }
         }
     }
