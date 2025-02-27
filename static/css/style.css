@@ -119,7 +119,9 @@ button:disabled {
 .opponent-card {
     width: 30px;
     height: 45px;
-    background-color: #d9534f;
+    background-color: #000000;
+    background-image: url('../images/card_back.png');
+    background-size: cover;
     border-radius: 5px;
     margin: 0 -5px;
     box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
