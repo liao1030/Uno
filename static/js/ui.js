@@ -39,7 +39,6 @@ class UI {
         // 遊戲內按鈕
         document.getElementById('deck').addEventListener('click', () => this.drawCard());
         document.getElementById('uno-button').addEventListener('click', () => this.callUno());
-        document.getElementById('in-game-rules').addEventListener('click', () => this.showTutorial());
         document.getElementById('restart-game').addEventListener('click', () => this.restartGame());
         
         // 顏色選擇器
@@ -337,12 +336,13 @@ class UI {
     }
 
     /**
-     * 重新開始遊戲
+     * 重新開始遊戲（回到首頁）
      */
     restartGame() {
-        if (confirm('確定要重新開始遊戲嗎？當前進度將會丟失。')) {
+        if (confirm('確定要返回首頁嗎？當前進度將會丟失。')) {
             this.resetGame();
-            this.startGame();
+            document.getElementById('game-board').style.display = 'none';
+            document.getElementById('game-menu').style.display = 'block';
         }
     }
 
