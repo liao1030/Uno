@@ -156,9 +156,9 @@ button:disabled {
 }
 
 .deck {
-    background-color: #d9534f;
-    background-image: url('../images/card_back.png');
-    background-size: cover;
+    background-color: #000000 !important;
+    background-image: url('../images/card_back.png') !important;
+    background-size: cover !important;
     cursor: pointer;
 }
 
