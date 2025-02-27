@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNO卡牌遊戲</title>
+    <link rel="stylesheet" href="static/css/style.css">
+    <link rel="icon" href="static/images/favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <div class="game-container">
+        <header>
+            <h1>UNO卡牌遊戲</h1>
+        </header>
+        
+        <div class="game-menu" id="game-menu">
+            <h2>歡迎來到UNO卡牌遊戲!</h2>
+            <div class="menu-options">
+                <button id="start-game">開始遊戲</button>
+                <button id="rules">遊戲規則</button>
+                <button id="settings">設定</button>
+            </div>
+        </div>
+        
+        <div class="game-board" id="game-board" style="display: none;">
+            <div class="opponents-area" id="opponents-area">
+                <!-- 對手區域將由JavaScript動態生成 -->
+            </div>
+            
+            <div class="middle-area">
+                <div class="deck-area">
+                    <div class="deck" id="deck">
+                        <!-- 牌組 -->
+                    </div>
+                    <div class="discard-pile" id="discard-pile">
+                        <!-- 棄牌堆 -->
+                    </div>
+                </div>
+                
+                <div class="game-info">
+                    <div id="current-color" class="current-color">
+                        <!-- 當前顏色 -->
+                    </div>
+                    <div id="direction" class="direction">
+                        <!-- 遊戲方向 -->
+                    </div>
+                    <div id="current-player" class="current-player">
+                        <!-- 當前玩家 -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="player-area">
+                <div class="player-info">
+                    <h3 id="player-name">玩家</h3>
+                    <button id="uno-button">UNO!</button>
+                </div>
+                <div class="player-hand" id="player-hand">
+                    <!-- 玩家手牌將由JavaScript動態生成 -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="rules-modal" id="rules-modal" style="display: none;">
+            <div class="rules-content">
+                <span class="close-button" id="close-rules">&times;</span>
+                <h2>UNO遊戲規則</h2>
+                <div class="rules-text">
+                    <h3>遊戲目標</h3>
+                    <p>最先出完手中所有卡牌的玩家獲勝</p>
+                    
+                    <h3>卡牌組成</h3>
+                    <ul>
+                        <li><strong>數字牌</strong>：每種顏色(紅、黃、綠、藍)各有0-9的數字，其中0只有一張，1-9各有兩張</li>
+                        <li><strong>功能牌</strong>：每種顏色各有2張「跳過」、「反轉」和「+2」牌</li>
+                        <li><strong>特殊牌</strong>：4張「換色」牌和4張「+4換色」牌</li>
+                    </ul>
+                    
+                    <h3>遊戲進行</h3>
+                    <ul>
+                        <li>玩家需出與棄牌堆頂部卡牌顏色或數字/符號相同的卡牌</li>
+                        <li>若無法出牌，必須從抽牌堆抽一張牌</li>
+                        <li>抽到的牌若能出，可以立即出牌；若不能出，則輪到下一位玩家</li>
+                    </ul>
+                    
+                    <h3>功能牌效果</h3>
+                    <ul>
+                        <li><strong>跳過</strong>：下一位玩家喪失本回合出牌機會</li>
+                        <li><strong>反轉</strong>：遊戲進行方向反轉</li>
+                        <li><strong>+2</strong>：下一位玩家必須抽2張牌並喪失本回合出牌機會</li>
+                        <li><strong>換色</strong>：出牌者可以選擇下一張牌的顏色</li>
+                        <li><strong>+4換色</strong>：下一位玩家必須抽4張牌，並由出牌者選擇下一張牌的顏色</li>
+                    </ul>
+                    
+                    <h3>UNO規則</h3>
+                    <ul>
+                        <li>當玩家只剩一張牌時，必須點擊"UNO!"按鈕</li>
+                        <li>若忘記點擊"UNO!"且被其他玩家發現，罰抽2張牌</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="settings-modal" id="settings-modal" style="display: none;">
+            <div class="settings-content">
+                <span class="close-button" id="close-settings">&times;</span>
+                <h2>遊戲設定</h2>
+                <div class="settings-options">
+                    <div class="setting-item">
+                        <label for="player-count">玩家數量:</label>
+                        <select id="player-count">
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4" selected>4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                        </select>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <label for="sound-toggle">音效:</label>
+                        <input type="checkbox" id="sound-toggle" checked>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <label for="difficulty">電腦難度:</label>
+                        <select id="difficulty">
+                            <option value="easy">簡單</option>
+                            <option value="medium" selected>中等</option>
+                            <option value="hard">困難</option>
+                        </select>
+                    </div>
+                    
+                    <button id="save-settings">儲存設定</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="color-picker-modal" id="color-picker-modal" style="display: none;">
+            <div class="color-picker-content">
+                <h3>選擇顏色</h3>
+                <div class="color-options">
+                    <div class="color-option red" data-color="red"></div>
+                    <div class="color-option yellow" data-color="yellow"></div>
+                    <div class="color-option green" data-color="green"></div>
+                    <div class="color-option blue" data-color="blue"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="game-over-modal" id="game-over-modal" style="display: none;">
+            <div class="game-over-content">
+                <h2>遊戲結束!</h2>
+                <p id="winner-message"></p>
+                <button id="play-again">再玩一次</button>
+                <button id="back-to-menu">返回主選單</button>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>&copy; 2023 UNO卡牌遊戲 | 版權所有</p>
+    </footer>
+    
+    <!-- 音效資源 -->
+    <audio id="card-play-sound" src="static/sounds/card-play.mp3" preload="auto"></audio>
+    <audio id="card-draw-sound" src="static/sounds/card-draw.mp3" preload="auto"></audio>
+    <audio id="uno-call-sound" src="static/sounds/uno-call.mp3" preload="auto"></audio>
+    <audio id="game-win-sound" src="static/sounds/game-win.mp3" preload="auto"></audio>
+    <audio id="turn-change-sound" src="static/sounds/turn-change.mp3" preload="auto"></audio>
+    
+    <script src="static/js/card.js"></script>
+    <script src="static/js/deck.js"></script>
+    <script src="static/js/player.js"></script>
+    <script src="static/js/game.js"></script>
+    <script src="static/js/ui.js"></script>
+    <script src="static/js/main.js"></script>
+</body>
+</html> 
