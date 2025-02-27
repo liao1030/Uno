@@ -277,6 +277,10 @@ class Player {
                     for (let i = 0; i < this.hand.length; i++) {
                         const cardElement = document.createElement('div');
                         cardElement.className = 'opponent-card';
+                        // 確保卡片背面樣式正確應用
+                        cardElement.style.backgroundImage = "url('../images/card_back.png')";
+                        cardElement.style.backgroundSize = "cover";
+                        cardElement.style.backgroundColor = "#000000";
                         opponentCardsElement.appendChild(cardElement);
                     }
                 }
