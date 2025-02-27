@@ -406,6 +406,124 @@ button:disabled {
     }
 }
 
+/* 遊戲控制按鈕 */
+.game-controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.game-controls button {
+    padding: 8px 15px;
+    font-size: 14px;
+    background-color: #f0f0f0;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.game-controls button:hover {
+    background-color: #e0e0e0;
+    border-color: #999;
+}
+
+/* 規則解說模態框 */
+.tutorial-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.tutorial-content {
+    background-color: #fff;
+    margin: 5% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 800px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+.tutorial-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.tutorial-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.tutorial-navigation button {
+    padding: 8px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.tutorial-navigation button:hover {
+    background-color: #45a049;
+}
+
+.tutorial-navigation button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.tutorial-slides {
+    position: relative;
+    min-height: 400px;
+}
+
+.tutorial-slide {
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.tutorial-slide h3 {
+    color: #333;
+    margin-top: 0;
+    border-bottom: 2px solid #4CAF50;
+    padding-bottom: 10px;
+}
+
+.tutorial-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin: 20px 0;
+    min-height: 150px;
+}
+
+.demo-uno-button {
+    padding: 10px 20px;
+    background-color: #ff5722;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    cursor: pointer;
+    animation: pulse 1.5s infinite;
+}
+
 /* 響應式設計 */
 @media (max-width: 768px) {
     .middle-area {
@@ -427,6 +545,19 @@ button:disabled {
         width: 25px;
         height: 38px;
     }
+    
+    .tutorial-content {
+        width: 95%;
+        margin: 10% auto;
+    }
+    
+    .tutorial-slide {
+        padding: 15px;
+    }
+    
+    .tutorial-image {
+        flex-direction: column;
+    }
 }
 
 @media (max-width: 480px) {
@@ -446,5 +577,22 @@ button:disabled {
     .deck, .discard-pile {
         width: 80px;
         height: 120px;
+    }
+    
+    .tutorial-navigation {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .tutorial-navigation button {
+        width: 100%;
+    }
+    
+    .game-controls {
+        flex-direction: column;
+    }
+    
+    .game-controls button {
+        width: 100%;
     }
 } 

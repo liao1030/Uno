@@ -18,6 +18,7 @@
             <div class="menu-options">
                 <button id="start-game">開始遊戲</button>
                 <button id="rules">遊戲規則</button>
+                <button id="rules-tutorial">規則解說</button>
                 <button id="settings">設定</button>
             </div>
         </div>
@@ -47,6 +48,11 @@
                     <div id="current-player" class="current-player">
                         <!-- 當前玩家 -->
                     </div>
+                </div>
+                
+                <div class="game-controls">
+                    <button id="restart-game">重新開始</button>
+                    <button id="in-game-rules">規則</button>
                 </div>
             </div>
             
@@ -97,6 +103,78 @@
                         <li>當玩家只剩一張牌時，必須點擊"UNO!"按鈕</li>
                         <li>若忘記點擊"UNO!"且被其他玩家發現，罰抽2張牌</li>
                     </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tutorial-modal" id="tutorial-modal" style="display: none;">
+            <div class="tutorial-content">
+                <span class="close-button" id="close-tutorial">&times;</span>
+                <h2>UNO遊戲規則解說</h2>
+                <div class="tutorial-container">
+                    <div class="tutorial-navigation">
+                        <button id="prev-slide">上一頁</button>
+                        <span id="slide-counter">1/5</span>
+                        <button id="next-slide">下一頁</button>
+                    </div>
+                    <div class="tutorial-slides">
+                        <div class="tutorial-slide" id="slide-1">
+                            <h3>基本規則</h3>
+                            <p>UNO是一款風靡全球的卡牌遊戲，適合2-10人遊玩。遊戲目標是最先出完手中所有卡牌。</p>
+                            <div class="tutorial-image">
+                                <img src="static/images/card_back.png" alt="UNO卡牌" width="100">
+                            </div>
+                            <p>每位玩家初始獲得7張牌，遊戲順時針進行。玩家需出與棄牌堆頂部卡牌顏色或數字/符號相同的卡牌。</p>
+                        </div>
+                        <div class="tutorial-slide" id="slide-2" style="display: none;">
+                            <h3>卡牌種類</h3>
+                            <p>UNO牌組共108張卡牌，包括：</p>
+                            <ul>
+                                <li>數字牌(0-9)：每種顏色各有19張</li>
+                                <li>功能牌：每種顏色各有2張「跳過」、「反轉」和「+2」牌</li>
+                                <li>特殊牌：4張「換色」牌和4張「+4換色」牌</li>
+                            </ul>
+                            <div class="tutorial-image">
+                                <div class="card red"><div class="card-content"><span class="card-number">7</span></div></div>
+                                <div class="card yellow"><div class="card-content"><span class="card-symbol">⊘</span></div></div>
+                                <div class="card wild"><div class="card-content"><span class="card-symbol">🌈</span></div></div>
+                            </div>
+                        </div>
+                        <div class="tutorial-slide" id="slide-3" style="display: none;">
+                            <h3>功能牌效果</h3>
+                            <ul>
+                                <li><strong>跳過(⊘)</strong>：下一位玩家喪失本回合出牌機會</li>
+                                <li><strong>反轉(⟲)</strong>：遊戲進行方向反轉</li>
+                                <li><strong>+2</strong>：下一位玩家必須抽2張牌並喪失本回合出牌機會</li>
+                                <li><strong>換色(🌈)</strong>：出牌者可以選擇下一張牌的顏色</li>
+                                <li><strong>+4換色</strong>：下一位玩家必須抽4張牌，並由出牌者選擇下一張牌的顏色</li>
+                            </ul>
+                            <div class="tutorial-image">
+                                <div class="card green"><div class="card-content"><span class="card-symbol">⟲</span></div></div>
+                                <div class="card blue"><div class="card-content"><span class="card-symbol">+2</span></div></div>
+                                <div class="card wild"><div class="card-content"><span class="card-symbol">+4</span></div></div>
+                            </div>
+                        </div>
+                        <div class="tutorial-slide" id="slide-4" style="display: none;">
+                            <h3>UNO規則</h3>
+                            <p>當玩家只剩一張牌時，必須點擊"UNO!"按鈕，否則會被罰抽2張牌。</p>
+                            <div class="tutorial-image">
+                                <button class="demo-uno-button">UNO!</button>
+                            </div>
+                            <p>這是遊戲中的關鍵策略點，記得時刻關注其他玩家的手牌數量！</p>
+                        </div>
+                        <div class="tutorial-slide" id="slide-5" style="display: none;">
+                            <h3>遊戲操作</h3>
+                            <ul>
+                                <li>點擊您手中的卡牌來出牌</li>
+                                <li>點擊牌組來抽牌</li>
+                                <li>當您只剩一張牌時，點擊"UNO!"按鈕</li>
+                                <li>出換色牌時，選擇您想要的顏色</li>
+                                <li>使用"重新開始"按鈕可以隨時重新開始遊戲</li>
+                            </ul>
+                            <p>現在您已經了解了UNO的基本規則，準備好開始遊戲了嗎？</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -9,11 +9,11 @@ class UI {
         this.game = null;
         this.gameRunning = false;
         this.selectedColor = null;
-        
-        // 初始化設置
         this.playerCount = 4;
         this.difficulty = 'medium';
         this.soundEnabled = true;
+        this.currentSlide = 1;
+        this.totalSlides = 5;
         
         // 綁定事件處理程序
         this.bindEventHandlers();
@@ -23,75 +23,43 @@ class UI {
      * 綁定事件處理程序
      */
     bindEventHandlers() {
-        // 開始遊戲按鈕
-        const startGameButton = document.getElementById('start-game');
-        if (startGameButton) {
-            startGameButton.addEventListener('click', () => this.startGame());
-        }
+        // 主菜單按鈕
+        document.getElementById('start-game').addEventListener('click', () => this.startGame());
+        document.getElementById('rules').addEventListener('click', () => this.showRules());
+        document.getElementById('rules-tutorial').addEventListener('click', () => this.showTutorial());
+        document.getElementById('settings').addEventListener('click', () => this.showSettings());
         
-        // 規則按鈕
-        const rulesButton = document.getElementById('rules');
-        if (rulesButton) {
-            rulesButton.addEventListener('click', () => this.showRules());
-        }
+        // 遊戲內按鈕
+        document.getElementById('deck').addEventListener('click', () => this.drawCard());
+        document.getElementById('uno-button').addEventListener('click', () => this.callUno());
+        document.getElementById('restart-game').addEventListener('click', () => this.restartGame());
+        document.getElementById('in-game-rules').addEventListener('click', () => this.showRules());
         
-        // 設定按鈕
-        const settingsButton = document.getElementById('settings');
-        if (settingsButton) {
-            settingsButton.addEventListener('click', () => this.showSettings());
-        }
+        // 規則模態框
+        document.getElementById('close-rules').addEventListener('click', () => this.hideRules());
         
-        // 關閉規則按鈕
-        const closeRulesButton = document.getElementById('close-rules');
-        if (closeRulesButton) {
-            closeRulesButton.addEventListener('click', () => this.hideRules());
-        }
+        // 規則解說模態框
+        document.getElementById('close-tutorial').addEventListener('click', () => this.hideTutorial());
+        document.getElementById('prev-slide').addEventListener('click', () => this.prevSlide());
+        document.getElementById('next-slide').addEventListener('click', () => this.nextSlide());
         
-        // 關閉設定按鈕
-        const closeSettingsButton = document.getElementById('close-settings');
-        if (closeSettingsButton) {
-            closeSettingsButton.addEventListener('click', () => this.hideSettings());
-        }
-        
-        // 保存設定按鈕
-        const saveSettingsButton = document.getElementById('save-settings');
-        if (saveSettingsButton) {
-            saveSettingsButton.addEventListener('click', () => this.saveSettings());
-        }
-        
-        // 牌組點擊事件
-        const deckElement = document.getElementById('deck');
-        if (deckElement) {
-            deckElement.addEventListener('click', () => this.drawCard());
-        }
-        
-        // UNO按鈕
-        const unoButton = document.getElementById('uno-button');
-        if (unoButton) {
-            unoButton.addEventListener('click', () => this.callUno());
-        }
+        // 設置模態框
+        document.getElementById('close-settings').addEventListener('click', () => this.hideSettings());
+        document.getElementById('save-settings').addEventListener('click', () => this.saveSettings());
         
         // 顏色選擇器
         const colorOptions = document.querySelectorAll('.color-option');
         colorOptions.forEach(option => {
-            option.addEventListener('click', () => {
-                this.selectedColor = option.dataset.color;
+            option.addEventListener('click', (e) => {
+                this.selectedColor = e.target.dataset.color;
                 this.hideColorPicker();
                 this.playSelectedCard();
             });
         });
         
-        // 再玩一次按鈕
-        const playAgainButton = document.getElementById('play-again');
-        if (playAgainButton) {
-            playAgainButton.addEventListener('click', () => this.playAgain());
-        }
-        
-        // 返回主選單按鈕
-        const backToMenuButton = document.getElementById('back-to-menu');
-        if (backToMenuButton) {
-            backToMenuButton.addEventListener('click', () => this.backToMenu());
-        }
+        // 遊戲結束模態框
+        document.getElementById('play-again').addEventListener('click', () => this.playAgain());
+        document.getElementById('back-to-menu').addEventListener('click', () => this.backToMenu());
     }
 
     /**
@@ -361,5 +329,84 @@ class UI {
         this.difficulty = document.getElementById('difficulty').value;
         
         this.hideSettings();
+    }
+
+    /**
+     * 顯示規則解說模態框
+     */
+    showTutorial() {
+        document.getElementById('tutorial-modal').style.display = 'block';
+        this.currentSlide = 1;
+        this.updateSlideDisplay();
+    }
+
+    /**
+     * 隱藏規則解說模態框
+     */
+    hideTutorial() {
+        document.getElementById('tutorial-modal').style.display = 'none';
+    }
+
+    /**
+     * 顯示上一張幻燈片
+     */
+    prevSlide() {
+        if (this.currentSlide > 1) {
+            document.getElementById(`slide-${this.currentSlide}`).style.display = 'none';
+            this.currentSlide--;
+            document.getElementById(`slide-${this.currentSlide}`).style.display = 'block';
+            this.updateSlideDisplay();
+        }
+    }
+
+    /**
+     * 顯示下一張幻燈片
+     */
+    nextSlide() {
+        if (this.currentSlide < this.totalSlides) {
+            document.getElementById(`slide-${this.currentSlide}`).style.display = 'none';
+            this.currentSlide++;
+            document.getElementById(`slide-${this.currentSlide}`).style.display = 'block';
+            this.updateSlideDisplay();
+        }
+    }
+
+    /**
+     * 更新幻燈片顯示
+     */
+    updateSlideDisplay() {
+        document.getElementById('slide-counter').textContent = `${this.currentSlide}/${this.totalSlides}`;
+        
+        // 更新按鈕狀態
+        document.getElementById('prev-slide').disabled = (this.currentSlide === 1);
+        document.getElementById('next-slide').disabled = (this.currentSlide === this.totalSlides);
+    }
+
+    /**
+     * 重新開始遊戲
+     */
+    restartGame() {
+        if (confirm('確定要重新開始遊戲嗎？當前進度將會丟失。')) {
+            this.resetGame();
+            this.startGame();
+        }
+    }
+
+    /**
+     * 重置遊戲狀態
+     */
+    resetGame() {
+        // 清除遊戲相關元素
+        document.getElementById('opponents-area').innerHTML = '';
+        document.getElementById('player-hand').innerHTML = '';
+        document.getElementById('discard-pile').innerHTML = '';
+        document.getElementById('current-color').innerHTML = '';
+        document.getElementById('direction').innerHTML = '';
+        document.getElementById('current-player').innerHTML = '';
+        
+        // 重置遊戲狀態
+        this.game = null;
+        this.gameRunning = false;
+        this.selectedColor = null;
     }
 } 
