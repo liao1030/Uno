@@ -1,0 +1,23 @@
+{
+  "name": "uno",
+  "version": "1.0.0",
+  "description": "這是一個基於命令行的UNO卡牌遊戲實現。",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/liao1030/Uno.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/liao1030/Uno/issues"
+  },
+  "homepage": "https://github.com/liao1030/Uno#readme",
+  "dependencies": {
+    "canvas": "^3.1.0"
+  }
+}
