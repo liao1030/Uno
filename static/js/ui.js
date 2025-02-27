@@ -350,9 +350,27 @@ class UI {
         console.log('重新開始按鈕被點擊');
         if (confirm('確定要返回首頁嗎？當前進度將會丟失。')) {
             console.log('用戶確認返回首頁');
+            // 先重置遊戲狀態
             this.resetGame();
-            document.getElementById('game-board').style.display = 'none';
-            document.getElementById('game-menu').style.display = 'block';
+            
+            // 確保遊戲板隱藏
+            const gameBoard = document.getElementById('game-board');
+            if (gameBoard) {
+                gameBoard.style.display = 'none';
+                console.log('遊戲板已隱藏');
+            } else {
+                console.error('找不到遊戲板元素');
+            }
+            
+            // 確保遊戲選單顯示
+            const gameMenu = document.getElementById('game-menu');
+            if (gameMenu) {
+                gameMenu.style.display = 'block';
+                console.log('遊戲選單已顯示');
+            } else {
+                console.error('找不到遊戲選單元素');
+            }
+            
             console.log('已返回首頁');
         } else {
             console.log('用戶取消返回首頁');
@@ -363,18 +381,39 @@ class UI {
      * 重置遊戲狀態
      */
     resetGame() {
-        // 清除遊戲相關元素
-        document.getElementById('opponents-area').innerHTML = '';
-        document.getElementById('player-hand').innerHTML = '';
-        document.getElementById('discard-pile').innerHTML = '';
-        document.getElementById('current-color').innerHTML = '';
-        document.getElementById('direction').innerHTML = '';
-        document.getElementById('current-player').innerHTML = '';
+        console.log('開始重置遊戲狀態');
         
-        // 重置遊戲狀態
-        this.game = null;
-        this.gameRunning = false;
-        this.selectedColor = null;
+        try {
+            // 清除遊戲相關元素
+            const elementsToEmpty = [
+                'opponents-area',
+                'player-hand',
+                'discard-pile',
+                'current-color',
+                'direction',
+                'current-player'
+            ];
+            
+            elementsToEmpty.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.innerHTML = '';
+                    console.log(`已清空 ${id} 元素`);
+                } else {
+                    console.warn(`找不到 ${id} 元素`);
+                }
+            });
+            
+            // 重置遊戲狀態
+            this.game = null;
+            this.gameRunning = false;
+            this.selectedColor = null;
+            this.selectedCardIndex = undefined;
+            
+            console.log('遊戲狀態已完全重置');
+        } catch (error) {
+            console.error('重置遊戲時發生錯誤:', error);
+        }
     }
 
     /**
