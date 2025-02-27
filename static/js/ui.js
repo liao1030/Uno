@@ -23,6 +23,9 @@ class UI {
      * 綁定事件處理程序
      */
     bindEventHandlers() {
+        // 檢測是否為移動設備
+        this.isMobileDevice = window.matchMedia("(max-width: 768px)").matches;
+        
         // 主選單按鈕
         document.getElementById('start-game').addEventListener('click', () => this.startGame());
         document.getElementById('rules-tutorial').addEventListener('click', () => this.showTutorial());
@@ -65,6 +68,60 @@ class UI {
         
         // 設定按鈕
         document.getElementById('save-settings').addEventListener('click', () => this.saveSettings());
+        
+        // 添加觸摸事件處理
+        this.setupTouchEvents();
+        
+        // 添加屏幕方向變化監聽
+        this.setupOrientationChange();
+    }
+
+    /**
+     * 設置觸摸事件處理
+     */
+    setupTouchEvents() {
+        if (!this.isMobileDevice) return;
+        
+        // 防止雙擊縮放
+        document.addEventListener('touchend', (e) => {
+            const now = Date.now();
+            const DOUBLE_TAP_DELAY = 300;
+            
+            if (this.lastTap && (now - this.lastTap) < DOUBLE_TAP_DELAY) {
+                e.preventDefault();
+            }
+            
+            this.lastTap = now;
+        }, false);
+        
+        // 改進卡牌觸摸體驗
+        document.addEventListener('touchstart', (e) => {
+            if (e.target.closest('.card')) {
+                // 觸摸卡牌時添加活躍狀態
+                e.target.closest('.card').classList.add('touch-active');
+            }
+        }, false);
+        
+        document.addEventListener('touchend', (e) => {
+            // 移除所有卡牌的活躍狀態
+            document.querySelectorAll('.card.touch-active').forEach(card => {
+                card.classList.remove('touch-active');
+            });
+        }, false);
+    }
+    
+    /**
+     * 設置屏幕方向變化監聽
+     */
+    setupOrientationChange() {
+        window.addEventListener('orientationchange', () => {
+            // 延遲執行以確保DOM已更新
+            setTimeout(() => {
+                if (this.game) {
+                    this.game.render(cardIndex => this.onCardClick(cardIndex));
+                }
+            }, 300);
+        });
     }
 
     /**
