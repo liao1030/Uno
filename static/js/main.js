@@ -38,5 +38,5 @@ function preloadSounds() {
  */
 function preloadCardBack() {
     const img = new Image();
-    img.src = 'static/images/card-back.png';
+    img.src = 'static/images/card_back.png';
 } 

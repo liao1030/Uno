@@ -155,7 +155,7 @@ button:disabled {
 
 .deck {
     background-color: #d9534f;
-    background-image: url('../images/card-back.png');
+    background-image: url('../images/card_back.png');
     background-size: cover;
     cursor: pointer;
 }
@@ -271,6 +271,21 @@ button:disabled {
 
 .card-symbol {
     font-size: 2rem;
+}
+
+.face-down, .card.face-down {
+    background-color: #000000;
+    background-image: url('../images/card_back.png');
+    background-size: cover;
+}
+
+.card-back {
+    width: 100%;
+    height: 100%;
+    background-color: #000000;
+    background-image: url('../images/card_back.png');
+    background-size: cover;
+    border-radius: 10px;
 }
 
 /* 模態框樣式 */
